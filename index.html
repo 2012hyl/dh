@@ -208,7 +208,7 @@
 </head>
 <body>
     <div class="loading-container">
-        <div class="pixel-cat-wrapper">
+        <div class="pixel-cat-wrapper" id="catWrapper">
             <div class="pixel-unit pixel-scene"></div>
             <div class="pixel-unit pixel-hand" style="top:60px;left:60px;"></div>
             <div class="pixel-unit pixel-mouth" style="top:55px;left:82px;"></div>
@@ -217,5 +217,33 @@
         </div>
         <div class="loading-text">AI 正在为你设计旅行方案……</div>
     </div>
+
+    <!-- 修复移动端 box-shadow 失效的兼容脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var scene = document.querySelector('.pixel-scene');
+            if (scene) {
+                var shadow = window.getComputedStyle(scene).boxShadow;
+                var entries = shadow.split(', ');
+                var parent = scene.parentNode;
+                
+                entries.forEach(function(entry) {
+                    var parts = entry.trim().split(' ');
+                    if (parts.length >= 5) {
+                        var x = parseInt(parts[0]);
+                        var y = parseInt(parts[1]);
+                        var color = parts[4];
+                        var div = document.createElement('div');
+                        div.className = 'pixel-unit';
+                        div.style.left = x + 'px';
+                        div.style.top = y + 'px';
+                        div.style.backgroundColor = color;
+                        parent.appendChild(div);
+                    }
+                });
+                scene.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
